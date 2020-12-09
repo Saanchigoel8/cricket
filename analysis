@@ -1,0 +1,87 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "Interaction Models.ipynb",
+      "version": "0.3.2",
+      "provenance": [],
+      "collapsed_sections": [],
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/nishi1612/CS302-Modelling-and-Simulation/blob/master/Interaction_Models.ipynb\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "metadata": {
+        "id": "IUF4lHG4-x7l",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "cell_type": "code",
+      "source": [
+        "import numpy as np\n",
+        "import matplotlib.pyplot as plt\n",
+        "import math"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "metadata": {
+        "id": "eP_JgzWk-3HJ",
+        "colab_type": "code",
+        "outputId": "d65039c8-d68b-4480-a345-acf9724cce3c",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 390
+        }
+      },
+      "cell_type": "code",
+      "source": [
+        "start_time = 0\n",
+        "end_time = 5\n",
+        "dt = 0.01\n",
+        "n = int((end_time - start_time) / dt )\n",
+        "\n",
+        "WTS = np.zeros((n,1))\n",
+        "BTS = np.zeros((n,1))\n",
+        "WTS[0] = 20\n",
+        "BTS[0] = 15\n",
+        "wts_birth = 1\n",
+        "bts_birth = 1\n",
+        "wts_death = 0.27\n",
+        "bts_death = 0.2\n",
+        "\n",
+        "def model(birth,death,my_pop,other_pop):\n",
+        "  return my_pop*birth - death*other_pop*my_pop\n",
+        "\n",
+        "for i in range(1,len(WTS)):\n",
+        "  WTS[i] = WTS[i-1] + model(wts_birth,wts_death,WTS[i-1],BTS[i-1]) * dt\n",
+        "  BTS[i] = BTS[i-1] + model(bts_birth,bts_death,BTS[i-1],WTS[i-1]) * dt\n",
+        "  \n",
+        "plt.plot(np.arange(start_time,end_time,dt),WTS,label='WTS')\n",
+        "plt.plot(np.arange(start_time,end_time,dt),BTS,label='BTS')\n",
+        "plt.xlabel('Time (in days)')\n",
+        "plt.title('Interaction model\\nTwo species competing with each other')\n",
+        "plt.ylabel('Population')\n",
+        "plt.legend()\n",
+        "plt.show()"
+      ],
+      "execution_count": 2,
+      "outputs": [
+        {
+          "output_type": "display_data",
